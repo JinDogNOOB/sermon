@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "ANSWERS")
 @Entity
-@DiscriminatorValue("A")
 public class Answer extends Post{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ANSWER_ID")
@@ -27,6 +26,10 @@ public class Answer extends Post{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "QUESTION_ID")
+    private Question question;
 
     @Column(name = "IS_ADOPTED")
     private boolean isAdopted;

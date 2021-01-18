@@ -26,11 +26,12 @@ public class AccountDTO {
     private AccountRoleType roleType;
     private long point;
 
-    // 아 차라리 OSIV 사용하자
+    /**
+     * ModelMapper보다 BeanUtil.copyProperties가 더 빠름
+     */
     public static AccountDTO of(Account account){
-        // 필드명 동일할시 그냥 map (src, target.class)
+        // 필드명 동일할시 그냥 map (src, target.class) https://dbbymoon.tistory.com/4 참고
         AccountDTO accountDTO = ModelMapperUtils.getInstance().map(account, AccountDTO.class);
-        // https://dbbymoon.tistory.com/4 참고
         // 이름이 다른 필드는 직접 Set을 통해 매핑
         
         accountDTO.setPassword(null);

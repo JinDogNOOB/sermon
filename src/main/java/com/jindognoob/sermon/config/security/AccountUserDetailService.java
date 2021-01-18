@@ -26,7 +26,7 @@ public class AccountUserDetailService implements UserDetailsService{
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             // TODO Auto-generated method stub
-            Optional<Account> byUserEmail = accountRepository.findByEmailAsOptional(username);
+            Optional<Account> byUserEmail = accountRepository.findOneByEmailAsOptional(username);
             Account account = byUserEmail.orElseThrow(() -> new UsernameNotFoundException(username));
             return new AccountUserDetail(account.getEmail(), account.getPassword(), authorities(account.getRoleType()));
         }

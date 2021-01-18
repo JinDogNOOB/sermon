@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 public interface AccountService {
-    
+    /** 회원가입 하면서 Point도 생성 */
     public Long signup(String email, String password, AccountSignupType type);
     // public Long signin(Account account); oauth, spring security 적용
-
+    public boolean changepassword(String principal, String currentPassword, String newPassword);
     public Account getAccountInfo(Long id);
     
 

@@ -37,7 +37,12 @@ public class AccountRepository {
                 .setParameter("email", email).getResultList();
     }
 
-    public Optional<Account> findByEmailAsOptional(String email) {
+    public Account findOneByEmail(String email) {
+        return em.createQuery("select a from Account a where a.email = :email", Account.class)
+                .setParameter("email", email).getSingleResult();
+    }
+
+    public Optional<Account> findOneByEmailAsOptional(String email) {
         return Optional.of(em.createQuery("select a from Account a where a.email = :email", Account.class)
                 .setParameter("email", email).getSingleResult());
     }

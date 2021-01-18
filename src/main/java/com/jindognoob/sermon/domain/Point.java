@@ -30,5 +30,23 @@ public class Point {
 
     @Column(name = "AMOUNT")
     private Long amount;
+
+
+    
+    // Getter
+    public void setAccount(Account account){
+        this.account = account;
+        account.setPoint(this);
+    }
+
+    // ## BM ##
+    public void addPoint(Long amount){
+        this.amount += amount;
+    }
+    public void subPoint(Long amount) throws Exception{
+        Long restAmount = this.amount - amount;
+        if(restAmount < 0) throw new Exception("not enough point");
+        this.amount = restAmount;
+    }
     
 }
