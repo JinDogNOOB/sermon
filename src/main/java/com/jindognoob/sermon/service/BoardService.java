@@ -7,7 +7,6 @@ import com.jindognoob.sermon.domain.Question;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.Paging;
 import com.jindognoob.sermon.service.exceptions.ContentAuthorizationViolationException;
-import com.jindognoob.sermon.service.exceptions.PasswordPolicyViolationException;
 
 public interface BoardService {
     

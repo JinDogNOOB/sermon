@@ -64,6 +64,8 @@ public class BoardServiceJPAImpl implements BoardService{
 
         if(question.getStatus() == QuestionStatusType.CLOSED)
             throw new Exception("CLOSED된 Quetion에는 Answer를 등록할 수 없음");
+        if(question.getAccount() == account)
+            throw new IllegalStateException("자문자답할 수 없음");
 
         Answer answer = new Answer();
         answer.setAccount(account);

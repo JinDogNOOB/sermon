@@ -18,15 +18,18 @@ import com.jindognoob.sermon.domain.etypes.AccountRoleType;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "ACCOUNTS")
 public class Account {
     
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCOUNT_ID")
     private Long id;
 

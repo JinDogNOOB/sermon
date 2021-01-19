@@ -30,13 +30,19 @@ public class JPAConfig {
     Properties additionalProperties() {
         Properties properties = new Properties();
         // 방언
-        // properties.setProperty("hibernate.dialect",
-        // "org.hibernate.dialect.MySQL8Dialect");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQL8Dialect");
+        // properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+
+        properties.setProperty("open-in-view", "false");
+        properties.setProperty("hibernate.id.new_generator_mappings", "true");
 
         // 스키마 자동생성
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.id.new_generator_mappings", "true");
+
+        // 디버그용 설정
+        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("hibernate.format_sql", "true");
         return properties;
     }
 

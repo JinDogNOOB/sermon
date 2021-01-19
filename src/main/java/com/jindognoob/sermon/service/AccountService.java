@@ -2,11 +2,6 @@ package com.jindognoob.sermon.service;
 
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
-import com.jindognoob.sermon.repository.AccountRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 public interface AccountService {

@@ -1,6 +1,5 @@
 package com.jindognoob.sermon.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

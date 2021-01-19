@@ -1,7 +1,6 @@
 package com.jindognoob.sermon.domain;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "ANSWERS")
 @Entity
 public class Answer extends Post{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ANSWER_ID")
     private Long id;
 
