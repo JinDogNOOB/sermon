@@ -1,6 +1,8 @@
 package com.jindognoob.sermon.config.security.provider;
 
 
+import com.jindognoob.sermon.domain.etypes.AccountRoleType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -45,6 +47,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new InternalAuthenticationServiceException("accountSecService.loadUserByUsername() returned null, which is an interface contract violation");
         
         /* checker */
+        if(loadedUser.getAuthorities().contains(AccountRoleType.ROLE_BANNED)){
+            throw new DisabledException("user is disabled");
+        }
         if(!loadedUser.isAccountNonLocked()){
             throw new LockedException("User account is locked");
         }
@@ -59,6 +64,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Password does not match stored value");
         }
         log.info("패스워드 동일 인증성공");
+        
         /* checker */
         if(!loadedUser.isCredentialsNonExpired()){
             throw new CredentialsExpiredException("User credentials have expired");

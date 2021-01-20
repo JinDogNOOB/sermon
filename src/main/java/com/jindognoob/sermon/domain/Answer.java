@@ -10,10 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "ANSWERS")
 @Entity
@@ -32,5 +34,8 @@ public class Answer extends Post{
 
     @Column(name = "IS_ADOPTED")
     private boolean isAdopted;
+
+    @Column(name = "STAR")
+    private Long star;
 
 }

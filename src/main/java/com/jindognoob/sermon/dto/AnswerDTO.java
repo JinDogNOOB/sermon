@@ -28,6 +28,8 @@ public class AnswerDTO {
 
     private boolean isAdopted;
 
+    private Long star;
+
 
     public static AnswerDTO of(Answer answer){
         if(answer == null) return null;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.Point;
+import com.jindognoob.sermon.domain.etypes.AccountRoleType;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
 import com.jindognoob.sermon.dto.AccountDTO;
 import com.jindognoob.sermon.repository.AccountRepository;
@@ -64,6 +65,15 @@ public class AccountServiceJPAImpl implements AccountService {
     @Override
     public boolean simpleAuthentication(String email, String password){
         return passwordEncoder.matches(password, accountRepository.findOneByEmail(email).getPassword());
+    }
+
+    @Override
+    public void quit(String email, String password){
+        Account account = accountRepository.findOneByEmail(email);
+        account.setEmail("X");
+        account.setPassword("X");
+        account.setRoleType(AccountRoleType.ROLE_BANNED);
+        account.setSignupType(AccountSignupType.THIS);
     }
 
 

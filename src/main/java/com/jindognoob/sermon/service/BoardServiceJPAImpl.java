@@ -39,6 +39,7 @@ public class BoardServiceJPAImpl implements BoardService{
         question.setContent(content);
         question.setStatus(QuestionStatusType.ACTIVE);
         question.setCreatedDate(Calendar.getInstance().getTime());
+        question.setViewCount((long)0);
 
         questionRepository.save(question);
         return question.getId();
@@ -58,7 +59,10 @@ public class BoardServiceJPAImpl implements BoardService{
     }
     @Override
     public QuestionDTO getQuestion(Long id){
-        return QuestionDTO.of(questionRepository.findOne(id));
+        Question question = questionRepository.findOne(id);
+        if(question != null)
+            question.setViewCount(question.getViewCount()+1);
+        return QuestionDTO.of(question);
     }
 
     @Override
@@ -79,6 +83,7 @@ public class BoardServiceJPAImpl implements BoardService{
         answer.setContent(content);
         answer.setAdopted(false);
         answer.setCreatedDate(Calendar.getInstance().getTime());
+        answer.setStar((long)0);
 
         answerRepository.save(answer);
         return answer.getId();

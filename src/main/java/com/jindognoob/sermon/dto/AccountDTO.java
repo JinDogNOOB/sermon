@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jindognoob.sermon.domain.Account;
-import com.jindognoob.sermon.domain.Point;
 import com.jindognoob.sermon.domain.etypes.AccountRoleType;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
 import com.jindognoob.sermon.utils.ModelMapperUtils;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -12,6 +12,9 @@ public interface AccountService {
     public AccountDTO getAccountInfo(Long id);
 
     public boolean simpleAuthentication(String email, String password);
+
+    // 회원탈퇴
+    public void quit(String email, String password);
     
 
 

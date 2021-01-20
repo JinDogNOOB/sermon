@@ -32,4 +32,6 @@ public interface BoardService {
 
 
     public void adoptAnswer(String principal, Long questionId, Long answerId) throws ContentAuthorizationViolationException, QuestionStatusRuleViolationException, AnswerDoesNotBelongsToQuestionException;
+    // public void thumbsUpToAnswer()
+
 }

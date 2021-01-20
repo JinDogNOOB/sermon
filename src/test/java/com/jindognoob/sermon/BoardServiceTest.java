@@ -63,7 +63,7 @@ public class BoardServiceTest {
         try {
             boardService.deleteQuestion(account.getEmail(), id);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         assertEquals(null, boardService.getQuestion(id));
     }

@@ -13,8 +13,6 @@ import com.jindognoob.sermon.domain.QQuestion;
 import com.jindognoob.sermon.domain.Question;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.Paging;
-import com.querydsl.core.QueryFactory;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.stereotype.Repository;

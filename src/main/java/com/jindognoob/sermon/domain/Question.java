@@ -3,6 +3,7 @@ package com.jindognoob.sermon.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,10 +19,12 @@ import javax.persistence.Table;
 
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "QUESTIONS")
 @Entity
@@ -39,6 +42,9 @@ public class Question extends Post{
     @Enumerated(EnumType.STRING)
     private QuestionStatusType status;
 
+    @Column(name = "VIEW_COUNT")
+    private Long viewCount;
+
 
 
     // Getter
@@ -48,6 +54,6 @@ public class Question extends Post{
     }
 
     // mappedby
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<Answer>();
 }

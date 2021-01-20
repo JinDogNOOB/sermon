@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import com.jindognoob.sermon.domain.etypes.AccountRoleType;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
 
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
