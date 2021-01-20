@@ -1,6 +1,7 @@
 package com.jindognoob.sermon;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
@@ -8,7 +9,9 @@ import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.Paging;
 import com.jindognoob.sermon.service.AccountService;
 import com.jindognoob.sermon.service.BoardService;
+import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
 import com.jindognoob.sermon.service.exceptions.ContentAuthorizationViolationException;
+import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -196,44 +199,129 @@ public class BoardServiceTest {
                 if (i < 15)
                     boardService.adoptAnswer(account.getEmail(), qid, aid);
             }
-            log.info("PageTest : " + boardService.getQuestions(new Paging(1, 10), QuestionStatusType.ACTIVE).size());
-            log.info("PageTest : " + boardService.getQuestions(new Paging(2, 10), QuestionStatusType.CLOSED).size());
-            log.info("PageTest : " + boardService.getQuestions(new Paging(1, 30), QuestionStatusType.CLOSED).size());
+            // log.info("PageTest : " + boardService.getQuestions(new Paging(1, 10), QuestionStatusType.ACTIVE).size());
+            // log.info("PageTest : " + boardService.getQuestions(new Paging(2, 10), QuestionStatusType.CLOSED).size());
+            // log.info("PageTest : " + boardService.getQuestions(new Paging(1, 30), QuestionStatusType.CLOSED).size());
 
             assertEquals(20, boardService.getQuestions(new Paging(1, 10), QuestionStatusType.ACTIVE).size()
-                    + boardService.getQuestions(new Paging(2, 10), QuestionStatusType.CLOSED).size());
+                    + boardService.getQuestions(new Paging(1, 10), QuestionStatusType.CLOSED).size());
         } catch (Exception e) {
+            e.printStackTrace();
+            fail();
         }
     }
 
-    // @Test
-    // public void 가7(){
+    @Test
+    public void 자신이_올린_질문_조회_확인(){
+        try {
+            Account account = createTest0Account();
+            Account account1 = createTest1Account();
+            
+            for (int i = 0; i < 30; i++) {
+                boardService.addQuestion(account.getEmail(), "question", "question");
+                boardService.addQuestion(account1.getEmail(), "question", "question");
+            }
 
-    // }
 
-    // @Test
-    // public void 가8(){
+            assertEquals(30, boardService.getMyQuestions(account.getEmail(), new Paging(1, 30)).size());
+        } catch (Exception e) {
+            fail();
+        }
+    }
 
-    // }
+    @Test
+    public void 자신이_올린_질문_조회_확인_타입에따라(){
+        try {
+            Account account = createTest0Account();
+            Account account1 = createTest1Account();
+            for (int i = 0; i < 30; i++) {
+                long qid = boardService.addQuestion(account.getEmail(), "question", "question");
+                long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
+                if(i < 15) boardService.adoptAnswer(account.getEmail(), qid, aid);
+            }
 
-    // @Test
-    // public void 가9(){
+            assertEquals(15, boardService.getMyQuestions(account.getEmail(), new Paging(1, 30), QuestionStatusType.CLOSED).size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
-    // }
+    @Test
+    public void 답변_채택_권한자아닐때_예외_확인(){
+        try {
+            Account account0 = createTest0Account();
+            Account account1 = createTest1Account();
 
-    // @Test
-    // public void 가0(){
+            long qid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
 
-    // }
+            Assertions.assertThrows(ContentAuthorizationViolationException.class, () -> {
+                boardService.adoptAnswer(account1.getEmail(), qid, aid);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
-    // @Test
-    // public void 가11(){
+    @Test
+    public void CLOSED된_질문에서_채택시도할시_예외_확인(){
+        try {
+            Account account0 = createTest0Account();
+            Account account1 = createTest1Account();
 
-    // }
+            long qid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
+            long zzz = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
+            boardService.adoptAnswer(account0.getEmail(), qid, aid);
 
-    // @Test
-    // public void 가12(){
+            Assertions.assertThrows(QuestionStatusRuleViolationException.class, () -> {
+                boardService.adoptAnswer(account0.getEmail(), qid, zzz);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
-    // }
+    @Test
+    public void 질문에_포함되지않는_답변_채택시도시_예외_확인(){
+        try {
+            Account account0 = createTest0Account();
+            Account account1 = createTest1Account();
+
+            long qid = boardService.addQuestion(account0.getEmail(), "question", "question");
+
+            long aqid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long aid = boardService.addAnswer(account1.getEmail(), "a", "a", aqid);
+
+            Assertions.assertThrows(AnswerDoesNotBelongsToQuestionException.class, () -> {
+                boardService.adoptAnswer(account0.getEmail(), qid, aid);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void 포인트_테스트(){
+        try {
+            Account account0 = createTest0Account();
+            Account account1 = createTest1Account();
+
+            boardService.addQuestion(account0.getEmail(), "question", "question");
+            long aqid = boardService.addQuestion(account0.getEmail(), "question", "question");
+
+            long aid = boardService.addAnswer(account1.getEmail(), "a", "a", aqid);
+            boardService.adoptAnswer(account0.getEmail(), aqid, aid);
+
+            assertEquals(11, account0.getPoint().getAmount() + account1.getPoint().getAmount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
 }

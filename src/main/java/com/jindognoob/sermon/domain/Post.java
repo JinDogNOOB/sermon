@@ -20,6 +20,7 @@ public class Post {
     private String content;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="CREATED_DATE")
     private Date createdDate;
 
 

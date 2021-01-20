@@ -63,8 +63,14 @@ public class QuestionRepository {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QQuestion q = QQuestion.question;
         // 1) 커버링 인덱스로 대상 조회 -> https://jojoldu.tistory.com/529?category=637935 이분 진짜 주석 멋지게 다신다!! 배움
-        List<Long> ids = queryFactory.select(q.id).from(q).where(/*q.status.eq(type)*/).orderBy(q.id.desc())
-                .limit(paging.getPageSize()).offset((paging.getPageNumber()) * paging.getPageSize()).fetch();
+        List<Long> ids = queryFactory
+            .select(q.id)
+            .from(q)
+            .where(q.status.eq(type))
+            .orderBy(q.id.desc())
+            .limit(paging.getPageSize())
+            .offset(paging.getPageNumber() * paging.getPageSize())
+            .fetch();
         
         // 1-1) 대상이 없을 경우
         if(CollectionUtils.isEmpty(ids)){
@@ -76,33 +82,50 @@ public class QuestionRepository {
         // select 안에 Projections.fields(DTOclass.class, q.id.as(bookId), q.name ...)등으로 dto 변환 가능
         return queryFactory.select(q).from(q).where(q.id.in(ids)).orderBy(q.id.desc()).fetch();
 
-        // String query = "select q from Question q join (select qq.id from Question qq where qq.status = :status order by "
-
-        // TypedQuery<Question> query = em.createQuery("select q from Question q where q.status = :status order by q.id DESC", Question.class);
-        /* TypedQuery<Question> query = em.createQuery("select q from Question q where q.status = :status order by q.id DESC", Question.class);
-        query.setFirstResult((paging.getPageNumber()) * paging.getPageSize());
-        query.setMaxResults(paging.getPageSize());
-        query.setParameter("status", type);
-        
-        return query.getResultList(); */
     }
 
 
     public List<Question> findMyQuestionAsPage(Account account, Paging paging){
-        TypedQuery<Question> query = em.createQuery("select q from Question q where q.account = :account order by q.id DESC ", Question.class);
-        query.setFirstResult((paging.getPageNumber()) * paging.getPageSize());
-        query.setMaxResults(paging.getPageSize());
-        query.setParameter("account", account);
-        return query.getResultList();
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QQuestion question = QQuestion.question;
+
+        List<Long> ids = queryFactory
+            .select(question.id)
+            .from(question)
+            .orderBy(question.id.desc())
+            .limit(paging.getPageSize())
+            .offset((paging.getPageNumber()) * paging.getPageSize())
+            .fetch();
+
+        if(CollectionUtils.isEmpty(ids)) return new ArrayList<Question>();
+
+        return queryFactory
+            .select(question)
+            .from(question)
+            .where(question.id.in(ids))
+            .orderBy(question.id.desc()).fetch();
     }
 
     public List<Question> findMyQuestionAsPage(Account account, Paging paging, QuestionStatusType type){
-        TypedQuery<Question> query = em.createQuery("select q from Question q where q.account = :account q.status = :status order by q.id DESC ", Question.class);
-        query.setFirstResult((paging.getPageNumber()) * paging.getPageSize());
-        query.setMaxResults(paging.getPageSize());
-        query.setParameter("account", account);
-        query.setParameter("status", type);
-        return query.getResultList();
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QQuestion question = QQuestion.question;
+
+        List<Long> ids = queryFactory
+            .select(question.id)
+            .from(question)
+            .where(question.status.eq(type))
+            .orderBy(question.id.desc())
+            .limit(paging.getPageSize())
+            .offset((paging.getPageNumber()) * paging.getPageSize())
+            .fetch();
+
+        if(CollectionUtils.isEmpty(ids)) return new ArrayList<Question>();
+
+        return queryFactory
+            .select(question)
+            .from(question)
+            .where(question.id.in(ids))
+            .orderBy(question.id.desc()).fetch();
     }
 
 }

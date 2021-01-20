@@ -12,8 +12,10 @@ import com.jindognoob.sermon.repository.AccountRepository;
 import com.jindognoob.sermon.repository.AnswerRepository;
 import com.jindognoob.sermon.repository.QuestionRepository;
 import com.jindognoob.sermon.service.constants.PointRule;
+import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
 import com.jindognoob.sermon.service.exceptions.ContentAuthorizationViolationException;
 import com.jindognoob.sermon.service.exceptions.PasswordPolicyViolationException;
+import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,13 +45,14 @@ public class BoardServiceJPAImpl implements BoardService{
     
 
     @Override
-    public void deleteQuestion(String principal, Long questionId) throws ContentAuthorizationViolationException, Exception{
+    public void deleteQuestion(String principal, Long questionId) throws ContentAuthorizationViolationException,
+            QuestionStatusRuleViolationException {
         Account account = accountRepository.findOneByEmail(principal);
         Question question = questionRepository.findOne(questionId);
         if(account.getId() != question.getAccount().getId()) 
             throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
         if(question.getStatus() == QuestionStatusType.CLOSED)
-            throw new Exception("CLOSED된 QUESTION은 삭제할 수 없음");
+            throw new QuestionStatusRuleViolationException("CLOSED된 QUESTION은 삭제할 수 없음");
         questionRepository.delete(question);
     }
     @Override
@@ -58,12 +61,13 @@ public class BoardServiceJPAImpl implements BoardService{
     }
 
     @Override
-    public Long addAnswer(String principal, String title, String content, Long questionId) throws Exception {
+    public Long addAnswer(String principal, String title, String content, Long questionId)
+            throws QuestionStatusRuleViolationException {
         Account account = accountRepository.findOneByEmail(principal);
         Question question = questionRepository.findOne(questionId);
 
         if(question.getStatus() == QuestionStatusType.CLOSED)
-            throw new Exception("CLOSED된 Quetion에는 Answer를 등록할 수 없음");
+            throw new QuestionStatusRuleViolationException("CLOSED된 Quetion에는 Answer를 등록할 수 없음");
         if(question.getAccount() == account)
             throw new IllegalStateException("자문자답할 수 없음");
 
@@ -80,13 +84,14 @@ public class BoardServiceJPAImpl implements BoardService{
     }
     
     @Override
-    public void deleteAnswer(String principal, Long answerId) throws ContentAuthorizationViolationException, Exception {
+    public void deleteAnswer(String principal, Long answerId) throws ContentAuthorizationViolationException,
+            QuestionStatusRuleViolationException {
         Account account = accountRepository.findOneByEmail(principal);
         Answer answer = answerRepository.findOne(answerId);
         if(answer.getAccount().getId() != account.getId())
             throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
         if(answer.getQuestion().getStatus() == QuestionStatusType.CLOSED)
-            throw new Exception("CLOSED된 Quetion에 등록된 Answer는 삭제할 수 없음");
+            throw new QuestionStatusRuleViolationException("CLOSED된 Quetion에 등록된 Answer는 삭제할 수 없음");
         answerRepository.delete(answer);
     }
     @Override
@@ -122,10 +127,15 @@ public class BoardServiceJPAImpl implements BoardService{
     /**
      * 답변 채택
      * 
+     * @throws QuestionStatusRuleViolationException
+     * @throws AnswerDoesNotBelongsToQuestionException
+     * 
      * @throws Exception
      */
     @Override
-    public void adoptAnswer(String principal, Long questionId, Long answerId) throws Exception, ContentAuthorizationViolationException{
+    public void adoptAnswer(String principal, Long questionId, Long answerId)
+            throws ContentAuthorizationViolationException, QuestionStatusRuleViolationException,
+            AnswerDoesNotBelongsToQuestionException {
         Account account = accountRepository.findOneByEmail(principal);
         Question question = questionRepository.findOne(questionId);
         Answer answer = answerRepository.findOne(answerId);
@@ -133,9 +143,9 @@ public class BoardServiceJPAImpl implements BoardService{
         if(account.getId() != question.getAccount().getId()) 
             throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
         if(question.getStatus() == QuestionStatusType.CLOSED)
-            throw new Exception("CLOSED된 QUESTION에서는 더이상 채택기능을 사용할 수 없음");
+            throw new QuestionStatusRuleViolationException("CLOSED된 QUESTION에서는 더이상 채택기능을 사용할 수 없음");
         if(answer.getQuestion() != question)
-            throw new Exception("채택하려고 하는 답변이 해당 질문에 등록된 것이 아님");
+            throw new AnswerDoesNotBelongsToQuestionException("채택하려고 하는 답변이 해당 질문에 등록된 것이 아님");
 
         question.setStatus(QuestionStatusType.CLOSED);
         answer.setAdopted(true);
