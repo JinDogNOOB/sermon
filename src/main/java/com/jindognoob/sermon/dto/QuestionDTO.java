@@ -26,6 +26,7 @@ public class QuestionDTO {
     private Long accountId;
     private QuestionStatusType status;
     private List<AnswerDTO> answers = new ArrayList<AnswerDTO>();
+    private List<String> tags;
 
 
     public static QuestionDTO of(Question question){

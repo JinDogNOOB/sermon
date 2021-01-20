@@ -12,9 +12,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 @Repository
 public class HashTagRepositoty {
     @PersistenceContext EntityManager em;
@@ -47,10 +46,11 @@ public class HashTagRepositoty {
             .select(h.id)
             .from(h)
             .where(h.tag.like(letter + "%"))
+            .orderBy(h.tag.asc())
             .limit(10)
             .fetch();
         
-        return queryFactory.select(h).from(h).where(h.id.in(ids)).fetch();
+        return queryFactory.select(h).from(h).where(h.id.in(ids)).orderBy(h.tag.asc()).fetch();
     }
 
 
