@@ -68,8 +68,17 @@ public class BoardController {
     // 질문 수정
     @RequestMapping(value="/question/{questionId}", method=RequestMethod.PUT)
     public void modifyQuestion(
-        @PathVariable long questionId
+        @PathVariable long questionId,
+        @RequestParam("title") String title,
+        @RequestParam("content") String content,
+        HttpServletResponse response
         ) {
+            String principal = getPrincipal();
+            try {
+                boardService.modifyQuestion(principal, questionId, title, content);
+            } catch (ContentAuthorizationViolationException e) {
+                response.setStatus(400);
+            }
         return;
     }
     // 질문 삭제
@@ -118,13 +127,18 @@ public class BoardController {
     // 답변 추천
     @RequestMapping(value="/question/{questionId}/answer/{answerId}", method=RequestMethod.POST)
     public void thumbsUpToAnswer(@PathVariable long questionId, @PathVariable long answerId) {
-        //
+        boardService.thumbsUpToAnswer(answerId);
         return;
     }
     // 답변 수정
     @RequestMapping(value="/question/{questionId}/answer/{answerId}", method=RequestMethod.PUT)
-    public void modifyAnswer(@PathVariable long questionId, @PathVariable long answerId) {
-        //
+    public void modifyAnswer(@PathVariable long questionId, @PathVariable long answerId, @RequestParam("title")String title, @RequestParam("content")String content, HttpServletResponse response) {
+        String principal = getPrincipal();
+        try {
+            boardService.modifyAnswer(principal, answerId, title, content);
+        } catch (ContentAuthorizationViolationException e) {
+            response.setStatus(400);
+        }
         return;
     }
     // 답변 삭제
