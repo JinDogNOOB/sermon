@@ -23,6 +23,6 @@ public class HashTag {
     @Column(name = "HASHTAG_ID")
     private Long id;
 
-    @Column(name = "HASHTAG")
-    private String hashTag;
+    @Column(name = "TAG")
+    private String tag;
 }
