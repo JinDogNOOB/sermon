@@ -4,23 +4,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jindognoob.sermon.domain.Account;
+import com.jindognoob.sermon.domain.Point;
 import com.jindognoob.sermon.domain.etypes.AccountRoleType;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
 import com.jindognoob.sermon.utils.ModelMapperUtils;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class AccountDTO {
     private Long id;
-
     private String email;
-    private String password;
+    // private String password;
     private AccountSignupType signupType;
     private AccountRoleType roleType;
-    private long point;
+    private Long point;
+
 
     /**
      * ModelMapper보다 BeanUtil.copyProperties가 더 빠름
@@ -30,9 +36,7 @@ public class AccountDTO {
         AccountDTO accountDTO = ModelMapperUtils.getInstance().map(account, AccountDTO.class);
         // 이름이 다른 필드는 직접 Set을 통해 매핑
         
-        accountDTO.setPassword(null);
         accountDTO.setPoint(account.getPoint().getAmount());
-
         return accountDTO;
     }
 
