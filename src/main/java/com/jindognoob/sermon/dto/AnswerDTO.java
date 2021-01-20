@@ -30,6 +30,7 @@ public class AnswerDTO {
 
 
     public static AnswerDTO of(Answer answer){
+        if(answer == null) return null;
         AnswerDTO answerDTO = ModelMapperUtils.getInstance().map(answer, AnswerDTO.class);
         
         answerDTO.setAccountId(answer.getAccount().getId());
@@ -40,6 +41,7 @@ public class AnswerDTO {
 
     // 아마 accountID는 포함안될거임 실제 보고 필요하면 추가 
     public static List<AnswerDTO> of(List<Answer> answers){
+        if(answers == null) return null;
         return answers.stream()
         .map(answerEntity -> ModelMapperUtils.getInstance().map(answerEntity, AnswerDTO.class))
         .collect(Collectors.toList());

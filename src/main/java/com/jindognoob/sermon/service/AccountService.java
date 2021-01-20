@@ -10,6 +10,8 @@ public interface AccountService {
     // public Long signin(Account account); oauth, spring security 적용
     public boolean changepassword(String principal, String currentPassword, String newPassword);
     public AccountDTO getAccountInfo(Long id);
+
+    public boolean simpleAuthentication(String email, String password);
     
 
 

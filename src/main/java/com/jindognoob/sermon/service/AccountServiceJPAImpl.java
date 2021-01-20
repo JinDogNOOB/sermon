@@ -60,6 +60,12 @@ public class AccountServiceJPAImpl implements AccountService {
     }
 
 
+    @Override
+    public boolean simpleAuthentication(String email, String password){
+        return passwordEncoder.matches(password, accountRepository.findOneByEmail(email).getPassword());
+    }
+
+
 
 
 
