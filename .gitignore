@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### H2DB file ###
+db.mv.db 
+db.trace.db
+
+
+### .mvn/wrapper
+.mvn

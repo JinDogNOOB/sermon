@@ -25,11 +25,12 @@ public class AccountServiceJPAImpl implements AccountService {
 
 
     @Override
-    public Long signup(String email, String password, AccountSignupType type) {
+    public Long signup(String email, String password, String nickname, AccountSignupType type) {
         Account account = new Account();
         account.setEmail(email);
         account.setPassword(passwordEncoder.encode(password));
         account.setSignupType(type);
+        account.setNickname(nickname);
         
         validateDuplicateAccount(account);
 

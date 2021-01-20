@@ -36,6 +36,9 @@ public class Account {
     @Column(name ="EMAIL")
     private String email;
 
+    @Column(name = "NICKNAME")
+    private String nickname;
+
     @Column(name="PASSWORD")
     private String password;
 

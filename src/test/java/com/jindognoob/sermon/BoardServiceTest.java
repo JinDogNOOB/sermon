@@ -32,12 +32,12 @@ public class BoardServiceTest {
     BoardService boardService;
 
     private AccountDTO createTest0Account() {
-        Long id = accountService.signup("tester0@test.com", "qwer1234", AccountSignupType.THIS);
+        Long id = accountService.signup("tester0@test.com", "qwer1234", "nickname", AccountSignupType.THIS);
         return accountService.getAccountInfo(id);
     }
 
     private AccountDTO createTest1Account() {
-        Long id = accountService.signup("tester1@test.com", "qwer1234", AccountSignupType.THIS);
+        Long id = accountService.signup("tester1@test.com", "qwer1234", "nickname", AccountSignupType.THIS);
         return accountService.getAccountInfo(id);
     }
 

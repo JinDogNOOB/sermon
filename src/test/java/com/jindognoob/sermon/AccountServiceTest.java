@@ -23,7 +23,7 @@ public class AccountServiceTest {
     
     @Test
     public void 유저_회원가입(){
-        Long id = accountService.signup("test1@test.com", "qwer1234", AccountSignupType.THIS);
+        Long id = accountService.signup("test1@test.com", "qwer1234", "nickname", AccountSignupType.THIS);
         AccountDTO account = accountService.getAccountInfo(id);
 
         assertEquals("test1@test.com", account.getEmail());
@@ -31,10 +31,10 @@ public class AccountServiceTest {
 
     @Test
     public void 유저_중복가입_예외(){
-        accountService.signup("test1@test.com", "qwer1234", AccountSignupType.THIS);
+        accountService.signup("test1@test.com", "qwer1234", "nickname", AccountSignupType.THIS);
     
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            accountService.signup("test1@test.com", "qwer1234", AccountSignupType.THIS);
+            accountService.signup("test1@test.com", "qwer1234", "nickname", AccountSignupType.THIS);
         });
         // fail("유저 중복가입 예외 발생 안함");
     }
@@ -43,7 +43,7 @@ public class AccountServiceTest {
     public void 유저_패스워드변경(){
         String cp = "qwer1234";
         String np = "aaaabbbb";
-        Long id = accountService.signup("test@test.com", cp, AccountSignupType.THIS);
+        Long id = accountService.signup("test@test.com", cp, "nickname", AccountSignupType.THIS);
         accountService.changepassword("test@test.com", cp, np);
     
         assertEquals(true, accountService.simpleAuthentication("test@test.com", np));
@@ -86,7 +86,7 @@ public class AccountServiceTest {
 
     
     private AccountDTO createTestAccount(){
-        Long id = accountService.signup("tester@test.com", "qwer1234", AccountSignupType.THIS);
+        Long id = accountService.signup("tester@test.com", "qwer1234", "nickname", AccountSignupType.THIS);
         return accountService.getAccountInfo(id);
     }
 
