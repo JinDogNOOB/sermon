@@ -5,6 +5,7 @@ import java.util.List;
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.Point;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
+import com.jindognoob.sermon.dto.AccountDTO;
 import com.jindognoob.sermon.repository.AccountRepository;
 import com.jindognoob.sermon.repository.PointRepository;
 
@@ -43,8 +44,8 @@ public class AccountServiceJPAImpl implements AccountService {
     }
 
     @Override
-    public Account getAccountInfo(Long id) {
-        return accountRepository.findOne(id);
+    public AccountDTO getAccountInfo(Long id) {
+        return AccountDTO.of(accountRepository.findOne(id));
     }
 
     @Override

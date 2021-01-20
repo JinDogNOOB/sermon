@@ -7,14 +7,15 @@ import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.Answer;
 import com.jindognoob.sermon.domain.Question;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
+import com.jindognoob.sermon.dto.AnswerDTO;
 import com.jindognoob.sermon.dto.Paging;
+import com.jindognoob.sermon.dto.QuestionDTO;
 import com.jindognoob.sermon.repository.AccountRepository;
 import com.jindognoob.sermon.repository.AnswerRepository;
 import com.jindognoob.sermon.repository.QuestionRepository;
 import com.jindognoob.sermon.service.constants.PointRule;
 import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
 import com.jindognoob.sermon.service.exceptions.ContentAuthorizationViolationException;
-import com.jindognoob.sermon.service.exceptions.PasswordPolicyViolationException;
 import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,8 @@ public class BoardServiceJPAImpl implements BoardService{
         questionRepository.delete(question);
     }
     @Override
-    public Question getQuestion(Long id){
-        return questionRepository.findOne(id);
+    public QuestionDTO getQuestion(Long id){
+        return QuestionDTO.of(questionRepository.findOne(id));
     }
 
     @Override
@@ -95,33 +96,33 @@ public class BoardServiceJPAImpl implements BoardService{
         answerRepository.delete(answer);
     }
     @Override
-    public Answer getAnswer(Long id){
-        return answerRepository.findOne(id);
+    public AnswerDTO getAnswer(Long id){
+        return AnswerDTO.of(answerRepository.findOne(id));
     }
 
     @Override
-    public List<Question> getQuestions(Paging paging){
-        return questionRepository.findPage(paging);
+    public List<QuestionDTO> getQuestions(Paging paging){
+        return QuestionDTO.of(questionRepository.findPage(paging));
     }
     @Override
-    public List<Question> getQuestions(Paging paging, QuestionStatusType type){
-        return questionRepository.findPage(paging, type);
+    public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type){
+        return QuestionDTO.of(questionRepository.findPage(paging, type));
     }
     @Override
-    public List<Question> getMyQuestions(String principal, Paging paging){
+    public List<QuestionDTO> getMyQuestions(String principal, Paging paging){
         Account account = accountRepository.findOneByEmail(principal);
-        return questionRepository.findMyQuestionAsPage(account, paging);
+        return QuestionDTO.of(questionRepository.findMyQuestionAsPage(account, paging));
     }
     @Override
-    public List<Question> getMyQuestions(String principal, Paging paging, QuestionStatusType type){
+    public List<QuestionDTO> getMyQuestions(String principal, Paging paging, QuestionStatusType type){
         Account account = accountRepository.findOneByEmail(principal);
-        return questionRepository.findMyQuestionAsPage(account, paging, type);
+        return QuestionDTO.of(questionRepository.findMyQuestionAsPage(account, paging, type));
     }
 
     @Override
-    public List<Answer> getAnswersOfQuestion(Long questionId){
+    public List<AnswerDTO> getAnswersOfQuestion(Long questionId){
         Question question = questionRepository.findOne(questionId);
-        return answerRepository.findAllByQuestion(question);
+        return AnswerDTO.of(answerRepository.findAllByQuestion(question));
     }
 
     /**
