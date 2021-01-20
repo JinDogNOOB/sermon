@@ -158,4 +158,31 @@ public class BoardServiceJPAImpl implements BoardService{
         answer.getAccount().getPoint().addPoint(PointRule.pointForAnswerWriter);
         account.getPoint().addPoint(PointRule.pointForQuetionWriter);
     }
+
+    @Override
+    public void thumbsUpToAnswer(Long answerId){
+        Answer answer = answerRepository.findOne(answerId);
+        answer.setStar(answer.getStar() + 1);
+        return;
+    }
+    @Override
+    public void modifyQuestion(String principal, Long questionId, String title, String content)
+            throws ContentAuthorizationViolationException {
+        Account account = accountRepository.findOneByEmail(principal);
+        Question question = questionRepository.findOne(questionId);
+        if(account.getId() != question.getAccount().getId()) 
+            throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
+        question.setTitle(title);
+        question.setContent(content);
+    }
+    @Override
+    public void modifyAnswer(String principal, Long answerId, String title, String content)
+            throws ContentAuthorizationViolationException {
+        Account account = accountRepository.findOneByEmail(principal);
+        Answer answer = answerRepository.findOne(answerId);
+        if(account.getId() != answer.getAccount().getId()) 
+            throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
+        answer.setTitle(title);
+        answer.setContent(content);
+    }
 }
