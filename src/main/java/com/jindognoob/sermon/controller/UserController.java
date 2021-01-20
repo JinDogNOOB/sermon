@@ -25,7 +25,7 @@ public class UserController {
         accountService.signup(email, password, nickname, AccountSignupType.THIS);
         return;
     }
-
+    
     /** 토큰 유효성 확인 */
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
     public void validateToken() {
