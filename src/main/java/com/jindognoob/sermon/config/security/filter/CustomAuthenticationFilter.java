@@ -22,9 +22,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String userEmail = request.getParameter("userEmail");
+        String userEmail = request.getParameter("email");
         if (userEmail == null) throw new AuthenticationServiceException("userEmail is null");
-        String userPw = request.getParameter("userPw");
+        String userPw = request.getParameter("password");
         if (userPw == null) throw new AuthenticationCredentialsNotFoundException("userPw is null");
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userEmail, userPw);
