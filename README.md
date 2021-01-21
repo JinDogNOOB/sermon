@@ -33,17 +33,17 @@
     - String content
 * /board/question/{questionId} DELETE : 질문 삭제
 
-* /question/{questionId}/answer GET : 답변 리스트 조회 SNR
-* /question/{questionId}/answer POST : 답변 등록
+* /board/question/{questionId}/answer GET : 답변 리스트 조회 SNR
+* /board/question/{questionId}/answer POST : 답변 등록
     - String title
     - String content
 
-* /question/{questionId}/answer/{answerId} GET : 답변 상세 조회 SNR
-* /question/{questionId}/answer/{answerId} POST : 답변 추천 SNR
-* /question/{questionId}/answer/{answerId} PUT : 답변 수정
+* /board/question/{questionId}/answer/{answerId} GET : 답변 상세 조회 SNR
+* /board/question/{questionId}/answer/{answerId} POST : 답변 추천 SNR
+* /board/question/{questionId}/answer/{answerId} PUT : 답변 수정
     - String title
     - String content
-* /question/{questionId}/answer/{answerId} DELETE : 답변 삭제
+* /board/question/{questionId}/answer/{answerId} DELETE : 답변 삭제
 
 
 

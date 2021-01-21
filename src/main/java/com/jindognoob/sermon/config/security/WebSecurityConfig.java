@@ -8,6 +8,7 @@ import com.jindognoob.sermon.config.security.provider.CustomAuthenticationProvid
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,7 +39,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
         .authorizeRequests()
         .antMatchers("/admin/**").hasRole("ADMIN")
-        .antMatchers("/auth/**", "/console/**").permitAll()
+        .antMatchers(
+            "/user/login",
+            "/user/signup",
+            "/console/**"
+            ).permitAll()
+            .antMatchers(HttpMethod.GET, "/board/question").permitAll()
+            .antMatchers(HttpMethod.GET, "/board/question/*").permitAll()
+            .antMatchers(HttpMethod.GET, "/board/question/*/answer").permitAll()
+            .antMatchers(HttpMethod.GET, "/board/question/*/answer/*").permitAll()
+            .antMatchers(HttpMethod.POST, "/board/question/*/answer/*").permitAll()
         .anyRequest().authenticated().and()
         .formLogin().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
