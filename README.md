@@ -5,7 +5,9 @@
 
 # api 
 * SNR : security not required
-
+* /user/login : 로그인 SNR
+    - email
+    - password
 * /user/signup POST : 회원가입 SNR
     - String email
     - String password
