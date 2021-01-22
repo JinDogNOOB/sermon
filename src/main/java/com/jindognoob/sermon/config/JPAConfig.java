@@ -30,8 +30,8 @@ public class JPAConfig {
     Properties additionalProperties() {
         Properties properties = new Properties();
         // 방언
-        // properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQL8Dialect");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQL8Dialect");
+        // properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
 
         properties.setProperty("open-in-view", "false");
         properties.setProperty("hibernate.id.new_generator_mappings", "true");

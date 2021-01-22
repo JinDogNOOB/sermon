@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private UserDetailsService accountUserDetailsServiceImpl;
+    @Autowired private UserDetailsService accountUserDetailsService;
     
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -42,7 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         log.info("아이디 패스워드 초기화 끝");
 
-        UserDetails loadedUser = accountUserDetailsServiceImpl.loadUserByUsername(username);
+        UserDetails loadedUser = accountUserDetailsService.loadUserByUsername(username);
         if(loadedUser == null)
             throw new InternalAuthenticationServiceException("accountSecService.loadUserByUsername() returned null, which is an interface contract violation");
         

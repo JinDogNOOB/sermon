@@ -1,5 +1,9 @@
 package com.jindognoob.sermon.config.security;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.jindognoob.sermon.config.security.filter.CustomAuthenticationFilter;
 import com.jindognoob.sermon.config.security.filter.JWTAuthorizationFilter;
 import com.jindognoob.sermon.config.security.handler.CustomLoginSuccessHandler;
@@ -17,6 +21,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          * 기존의 클라이언트html에서는 하나하나보내야하나,,
          */
         http.csrf().disable()
+        .cors().configurationSource(corsConfigurationSource()).and()
         .authorizeRequests()
         .antMatchers("/admin/**").hasRole("ADMIN")
         .antMatchers(
@@ -87,6 +95,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CustomLoginSuccessHandler customLoginSuccessHandler() {
         return new CustomLoginSuccessHandler();
+    }
+
+
+        // https://toycoms.tistory.com/37
+    // cors 정책 설정
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        List<String> allowedMethods = new ArrayList<>(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.addAllowedOriginPattern("http://localhost:3000");
+
+        configuration.addAllowedHeader("*");
+        // configuration.addAllowedHeader("X-Auth-Token");
+        // configuration.addAllowedHeader("Origin");
+        // configuration.addAllowedHeader("Authorization");
+
+        // configuration.addAllowedMethod("*");
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowCredentials(true);
+        
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }
