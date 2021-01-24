@@ -17,9 +17,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/board")
 public class BoardController {
@@ -31,6 +35,8 @@ public class BoardController {
     // 질문 리스트
     @RequestMapping(value = "/question", method = RequestMethod.GET)
     public List<QuestionDTO> getQuestions(Paging paging) {
+        log.info("paging.number : " + paging.getPageNumber());
+        log.info("paging.size : " + paging.getPageSize());
         return boardService.getQuestions(paging);
     }
 
