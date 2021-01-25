@@ -24,6 +24,7 @@ public interface BoardService {
 
 
     public List<QuestionDTO> getQuestions(Paging paging);
+    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex);
     public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type);
     public List<QuestionDTO> getMyQuestions(String principal, Paging paging);
     public List<QuestionDTO> getMyQuestions(String principal, Paging paging, QuestionStatusType type);

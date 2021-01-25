@@ -40,6 +40,7 @@ public class AnswerDTO {
         answerDTO.setAccountId(answer.getAccount().getId());
         answerDTO.setQuestionId(answer.getQuestion().getId());
         answerDTO.setNickname(answer.getAccount().getNickname());
+        answerDTO.setAdopted(answer.isAdopted());
         
         return answerDTO;
     }

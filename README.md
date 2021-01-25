@@ -21,6 +21,8 @@
     - String password
 
 * /board/question GET : 질문 리스트 조회 SNR
+* /board/question/more GET : 질문 리스트 조회 more (lastIndex기반) SNR
+    - long lastIndex : 요구사항변경으로 추가 
 * /board/question POST : 질문 등록
     - String title
     - String content

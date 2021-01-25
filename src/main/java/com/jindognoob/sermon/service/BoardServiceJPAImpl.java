@@ -22,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @Transactional
 public class BoardServiceJPAImpl implements BoardService{
@@ -110,6 +113,10 @@ public class BoardServiceJPAImpl implements BoardService{
         return QuestionDTO.of(questionRepository.findPage(paging));
     }
     @Override
+    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex){
+        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex));
+    }
+    @Override
     public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type){
         return QuestionDTO.of(questionRepository.findPage(paging, type));
     }
@@ -145,6 +152,11 @@ public class BoardServiceJPAImpl implements BoardService{
         Account account = accountRepository.findOneByEmail(principal);
         Question question = questionRepository.findOne(questionId);
         Answer answer = answerRepository.findOne(answerId);
+
+        log.info("questionId" + questionId);
+        log.info("accountId" + account.getId());
+        log.info("question.getAccount().getId()" + question.getAccount().getId());
+
 
         if(account.getId() != question.getAccount().getId()) 
             throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
