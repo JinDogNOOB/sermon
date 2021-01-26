@@ -12,7 +12,7 @@ import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationExcep
 
 public interface BoardService {
     
-    public Long addQuestion(String principal, String title, String content);
+    public Long addQuestion(String principal, String title, String content, String hashTags);
 
     public void deleteQuestion(String principal, Long questionId) throws ContentAuthorizationViolationException, QuestionStatusRuleViolationException;
     public QuestionDTO getQuestion(Long id);

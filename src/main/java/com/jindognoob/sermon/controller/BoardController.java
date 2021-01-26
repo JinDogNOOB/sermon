@@ -50,9 +50,9 @@ public class BoardController {
 
     // 질문 등록
     @RequestMapping(value = "/question", method = RequestMethod.POST)
-    public void addQuestion(@RequestParam("title") String title, @RequestParam("content") String content) {
+    public void addQuestion(@RequestParam("title") String title, @RequestParam("content") String content, @RequestParam("hashTags") String hashTags) {
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boardService.addQuestion(principal, title, content);
+        boardService.addQuestion(principal, title, content, hashTags);
         return;
     }
 

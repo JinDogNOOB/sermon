@@ -21,11 +21,14 @@
     - String password
 
 * /board/question GET : 질문 리스트 조회 SNR
+    - String hashTags ex) #adf #ff 
 * /board/question/more GET : 질문 리스트 조회 more (lastIndex기반) SNR
     - long lastIndex : 요구사항변경으로 추가 
+    - String hashTags ex) #adf #ff 
 * /board/question POST : 질문 등록
     - String title
     - String content
+    - String hashTags ex) #adf #ff 
 
 * /board/question/{questionId} GET : 질문 상세 조회 SNR
 * /board/question/{questionId} POST : 답변 채택

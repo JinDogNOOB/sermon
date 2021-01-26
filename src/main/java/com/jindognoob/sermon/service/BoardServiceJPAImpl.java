@@ -5,13 +5,17 @@ import java.util.List;
 
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.Answer;
+import com.jindognoob.sermon.domain.HashTag;
 import com.jindognoob.sermon.domain.Question;
+import com.jindognoob.sermon.domain.QuestionHashTag;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.AnswerDTO;
 import com.jindognoob.sermon.dto.Paging;
 import com.jindognoob.sermon.dto.QuestionDTO;
 import com.jindognoob.sermon.repository.AccountRepository;
 import com.jindognoob.sermon.repository.AnswerRepository;
+import com.jindognoob.sermon.repository.HashTagRepositoty;
+import com.jindognoob.sermon.repository.QuestionHashTagRepository;
 import com.jindognoob.sermon.repository.QuestionRepository;
 import com.jindognoob.sermon.service.constants.PointRule;
 import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
@@ -32,9 +36,11 @@ public class BoardServiceJPAImpl implements BoardService{
     @Autowired AnswerRepository answerRepository;
     @Autowired QuestionRepository questionRepository;
     @Autowired AccountRepository accountRepository;
-    
+    @Autowired HashTagRepositoty hashTagRepositoty;
+    @Autowired QuestionHashTagRepository questionHashTagRepository;
+
     @Override
-    public Long addQuestion(String principal, String title, String content){
+    public Long addQuestion(String principal, String title, String content, String hashTags){
         Account account = accountRepository.findOneByEmail(principal);
 
         Question question = new Question();
@@ -44,8 +50,21 @@ public class BoardServiceJPAImpl implements BoardService{
         question.setStatus(QuestionStatusType.ACTIVE);
         question.setCreatedDate(Calendar.getInstance().getTime());
         question.setViewCount((long)0);
-
         questionRepository.save(question);
+
+        // hashtag 등록 
+        List<String> hashTagList = HashTagParser.parseHashTagsString(hashTags);
+        for(String s : hashTagList){
+            HashTag hashTag = new HashTag();
+            hashTag.setTag(s);
+            hashTagRepositoty.save(hashTag);
+
+            QuestionHashTag questionHashTag = new QuestionHashTag();
+            questionHashTag.setHashTag(hashTag);
+            questionHashTag.setQuestion(question);
+            questionHashTagRepository.save(questionHashTag);
+        }
+
         return question.getId();
     }
     
@@ -111,11 +130,11 @@ public class BoardServiceJPAImpl implements BoardService{
 
     @Override
     public List<QuestionDTO> getQuestions(Paging paging, String hashTags){
-        return QuestionDTO.of(questionRepository.findPage(paging, HashTagParser.parseQueryString(hashTags)));
+        return QuestionDTO.of(questionRepository.findPage(paging, HashTagParser.parseHashTagsString(hashTags)));
     }
     @Override
     public List<QuestionDTO> getQuestions(Paging paging, long lastIndex, String hashTags){
-        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex, HashTagParser.parseQueryString(hashTags)));
+        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex, HashTagParser.parseHashTagsString(hashTags)));
     }
     @Override
     public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type){

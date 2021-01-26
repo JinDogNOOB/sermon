@@ -15,7 +15,6 @@ import com.jindognoob.sermon.domain.QQuestionHashTag;
 import com.jindognoob.sermon.domain.Question;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.Paging;
-import com.jindognoob.sermon.dto.HashTagDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.stereotype.Repository;
@@ -54,17 +53,17 @@ public class QuestionRepository {
         return em.createQuery("select q from Question q", Question.class).getResultList();
     }
 
-    public List<Question> findPage(Paging paging, HashTagDTO hashTagDTO){
+    public List<Question> findPage(Paging paging, List<String> hashTags){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QQuestion q = QQuestion.question;
         QQuestionHashTag qht = QQuestionHashTag.questionHashTag;
         QHashTag ht = QHashTag.hashTag;
 
-        if(hashTagDTO.getHashTags().size() > 0){
+        if(hashTags.size() > 0){
             List<Long> ids = queryFactory
             .select(q.id)
             .from(q)
-            .where(ht.tag.in(hashTagDTO.getHashTags()))
+            .where(ht.tag.in(hashTags))
             .orderBy(q.id.desc())
             .offset(paging.getPageSize() * paging.getPageNumber())
             .limit(paging.getPageSize())
@@ -79,18 +78,18 @@ public class QuestionRepository {
         query.setMaxResults(paging.getPageSize());
         return query.getResultList();
     }
-    public List<Question> findPage(Paging paging, long lastIndex, HashTagDTO hashTagDTO){
+    public List<Question> findPage(Paging paging, long lastIndex, List<String> hashTags){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QQuestion q = QQuestion.question;
 
         QQuestionHashTag qht = QQuestionHashTag.questionHashTag;
         QHashTag ht = QHashTag.hashTag;
 
-        if(hashTagDTO.getHashTags().size() > 0){
+        if(hashTags.size() > 0){
             List<Long> ids = queryFactory
             .select(q.id)
             .from(q)
-            .where(q.id.lt(lastIndex).and(ht.tag.in(hashTagDTO.getHashTags())))
+            .where(q.id.lt(lastIndex).and(ht.tag.in(hashTags)))
             .orderBy(q.id.desc())
             .limit(paging.getPageSize())
             .innerJoin(q.questionHashTags, qht)
