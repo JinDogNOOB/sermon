@@ -3,11 +3,14 @@ package com.jindognoob.sermon;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.List;
+
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.etypes.AccountSignupType;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.AccountDTO;
 import com.jindognoob.sermon.dto.Paging;
+import com.jindognoob.sermon.dto.QuestionDTO;
 import com.jindognoob.sermon.service.AccountService;
 import com.jindognoob.sermon.service.BoardService;
 import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
@@ -240,6 +243,9 @@ public class BoardServiceTest {
                 long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
                 if(i < 15) boardService.adoptAnswer(account.getEmail(), qid, aid);
             }
+            List<QuestionDTO> results = boardService.getMyQuestions(account.getEmail(), new Paging(1, 30), QuestionStatusType.CLOSED);
+            for(QuestionDTO result : results)
+                log.info(result.getTitle());
 
             assertEquals(15, boardService.getMyQuestions(account.getEmail(), new Paging(1, 30), QuestionStatusType.CLOSED).size());
         } catch (Exception e) {

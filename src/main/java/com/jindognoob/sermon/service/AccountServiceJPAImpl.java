@@ -32,6 +32,7 @@ public class AccountServiceJPAImpl implements AccountService {
         account.setPassword(passwordEncoder.encode(password));
         account.setSignupType(type);
         account.setNickname(nickname);
+        account.setRoleType(AccountRoleType.ROLE_USER);
         
         validateDuplicateAccount(account);
 

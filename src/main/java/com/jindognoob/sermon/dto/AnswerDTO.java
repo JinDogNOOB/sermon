@@ -1,5 +1,6 @@
 package com.jindognoob.sermon.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class AnswerDTO {
     private boolean isAdopted;
 
     private Long star;
+    private String nickname;
 
 
     public static AnswerDTO of(Answer answer){
@@ -37,6 +39,8 @@ public class AnswerDTO {
         
         answerDTO.setAccountId(answer.getAccount().getId());
         answerDTO.setQuestionId(answer.getQuestion().getId());
+        answerDTO.setNickname(answer.getAccount().getNickname());
+        answerDTO.setAdopted(answer.isAdopted());
         
         return answerDTO;
     }
@@ -44,8 +48,13 @@ public class AnswerDTO {
     // 아마 accountID는 포함안될거임 실제 보고 필요하면 추가 
     public static List<AnswerDTO> of(List<Answer> answers){
         if(answers == null) return null;
-        return answers.stream()
+       /*  return answers.stream()
         .map(answerEntity -> ModelMapperUtils.getInstance().map(answerEntity, AnswerDTO.class))
-        .collect(Collectors.toList());
+        .collect(Collectors.toList()); */
+        List<AnswerDTO> result = new ArrayList<AnswerDTO>();
+        for(Answer answer : answers){
+            result.add(AnswerDTO.of(answer));
+        }
+        return result;
     }
 }

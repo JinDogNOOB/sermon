@@ -36,6 +36,7 @@ public class TokenUtils {
     }
 
     public static boolean isValidToken(String token){
+        if(token == null) return false;
         try{
             Claims claims = getClaimsFromToken(token);
             log.info("isValidToekn()");
@@ -61,7 +62,10 @@ public class TokenUtils {
      * @return jwt token
      */
     public static String getTokenFromHeader(String header){
-        return header.split(" ")[1];
+        log.info("getToekenFromHeader = " + header);
+        String separatedHeader[] = header.split(" ");
+        if(separatedHeader.length == 1) return null;
+        else return separatedHeader[1];
     }
 
     public static String getUserEmailFromToken(String token){
@@ -70,7 +74,7 @@ public class TokenUtils {
     }
     public static AccountRoleType getRoleFromToken(String token){
         Claims claims = getClaimsFromToken(token);
-        return (AccountRoleType)claims.get("role");
+        return AccountRoleType.valueOf((String)claims.get("role"));
     }
 
 
@@ -96,8 +100,10 @@ public class TokenUtils {
     private static Map<String, Object> createClaims(Account account){
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보조회 가능
         Map<String, Object> claims = new HashMap<String, Object>();
+        claims.put("id", account.getId());
+        claims.put("nickname", account.getNickname());
         claims.put("email", account.getEmail());
-        claims.put("role", account.getRoleType());
+        claims.put("role", account.getRoleType().name());
         return claims;
     }
 

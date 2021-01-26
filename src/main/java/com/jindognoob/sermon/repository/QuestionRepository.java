@@ -57,6 +57,23 @@ public class QuestionRepository {
         query.setMaxResults(paging.getPageSize());
         return query.getResultList();
     }
+    public List<Question> findPage(Paging paging, long lastIndex){
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QQuestion q = QQuestion.question;
+        List<Long> ids = queryFactory
+            .select(q.id)
+            .from(q)
+            .where(q.id.lt(lastIndex))
+            .orderBy(q.id.desc())
+            .limit(paging.getPageSize())
+            .fetch();
+
+            if(CollectionUtils.isEmpty(ids)){
+                return new ArrayList<Question>();
+            }
+        return queryFactory.select(q).from(q).where(q.id.in(ids)).orderBy(q.id.desc()).fetch();
+
+    }
     public List<Question> findPage(Paging paging, QuestionStatusType type){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QQuestion q = QQuestion.question;
@@ -90,6 +107,7 @@ public class QuestionRepository {
         List<Long> ids = queryFactory
             .select(question.id)
             .from(question)
+            .where(question.account.eq(account))
             .orderBy(question.id.desc())
             .limit(paging.getPageSize())
             .offset((paging.getPageNumber()) * paging.getPageSize())
@@ -111,7 +129,7 @@ public class QuestionRepository {
         List<Long> ids = queryFactory
             .select(question.id)
             .from(question)
-            .where(question.status.eq(type))
+            .where(question.account.eq(account).and(question.status.eq(type)))
             .orderBy(question.id.desc())
             .limit(paging.getPageSize())
             .offset((paging.getPageNumber()) * paging.getPageSize())

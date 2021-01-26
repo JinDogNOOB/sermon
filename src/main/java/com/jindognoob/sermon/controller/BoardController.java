@@ -17,9 +17,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/board")
 public class BoardController {
@@ -31,7 +35,17 @@ public class BoardController {
     // 질문 리스트
     @RequestMapping(value = "/question", method = RequestMethod.GET)
     public List<QuestionDTO> getQuestions(Paging paging) {
+        log.info("paging.number : " + paging.getPageNumber());
+        log.info("paging.size : " + paging.getPageSize());
         return boardService.getQuestions(paging);
+    }
+
+    // 질문 리스트
+    @RequestMapping(value = "/question/more", method = RequestMethod.GET)
+    public List<QuestionDTO> getQuestionsMore(Paging paging, @RequestParam("lastIndex")long lastIndex) {
+        log.info("paging.number : " + paging.getPageNumber());
+        log.info("paging.size : " + paging.getPageSize());
+        return boardService.getQuestions(paging, lastIndex);
     }
 
     // 질문 등록
@@ -52,7 +66,8 @@ public class BoardController {
 
     // 답변 채택
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
-    public void adoptAnswer(@PathVariable long questionId, @RequestParam("answerId") long answerId, HttpServletResponse response) {
+    public void adoptAnswer(@PathVariable long questionId, @RequestParam("answerId") long answerId,
+            HttpServletResponse response) {
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             boardService.adoptAnswer(principal, questionId, answerId);
@@ -65,24 +80,22 @@ public class BoardController {
         }
         return;
     }
+
     // 질문 수정
-    @RequestMapping(value="/question/{questionId}", method=RequestMethod.PUT)
-    public void modifyQuestion(
-        @PathVariable long questionId,
-        @RequestParam("title") String title,
-        @RequestParam("content") String content,
-        HttpServletResponse response
-        ) {
-            String principal = getPrincipal();
-            try {
-                boardService.modifyQuestion(principal, questionId, title, content);
-            } catch (ContentAuthorizationViolationException e) {
-                response.setStatus(400);
-            }
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.PUT)
+    public void modifyQuestion(@PathVariable long questionId, @RequestParam("title") String title,
+            @RequestParam("content") String content, HttpServletResponse response) {
+        String principal = getPrincipal();
+        try {
+            boardService.modifyQuestion(principal, questionId, title, content);
+        } catch (ContentAuthorizationViolationException e) {
+            response.setStatus(400);
+        }
         return;
     }
+
     // 질문 삭제
-    @RequestMapping(value="/question/{questionId}", method=RequestMethod.DELETE)
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.DELETE)
     public void deleteQuestion(@PathVariable long questionId, HttpServletResponse response) {
         String principal = getPrincipal();
         try {
@@ -97,17 +110,16 @@ public class BoardController {
 
     // ######################################################################
 
-
-
     // 답변 리스트 조회
-    @RequestMapping(value="/question/{questionId}/answer", method=RequestMethod.GET)
+    @RequestMapping(value = "/question/{questionId}/answer", method = RequestMethod.GET)
     public List<AnswerDTO> getAnswerList(@PathVariable long questionId) {
         return boardService.getAnswersOfQuestion(questionId);
     }
 
     // 답변 등록
-    @RequestMapping(value="/question/{questionId}/answer", method=RequestMethod.POST)
-    public void addAnswer(@PathVariable long questionId, @RequestParam("title")String title, @RequestParam("content")String content, HttpServletResponse response) {
+    @RequestMapping(value = "/question/{questionId}/answer", method = RequestMethod.POST)
+    public void addAnswer(@PathVariable long questionId, @RequestParam("title") String title,
+            @RequestParam("content") String content, HttpServletResponse response) {
         String principal = getPrincipal();
         try {
             boardService.addAnswer(principal, title, content, questionId);
@@ -120,19 +132,23 @@ public class BoardController {
     // ######################################################################
 
     // 답변 디테일 조회
-    @RequestMapping(value="/question/{questionId}/answer/{answerId}", method=RequestMethod.GET)
+    @RequestMapping(value = "/question/{questionId}/answer/{answerId}", method = RequestMethod.GET)
     public AnswerDTO getAnswerDetail(@PathVariable long questionId, @PathVariable long answerId) {
         return boardService.getAnswer(answerId);
     }
+
     // 답변 추천
-    @RequestMapping(value="/question/{questionId}/answer/{answerId}", method=RequestMethod.POST)
+    @RequestMapping(value = "/question/{questionId}/answer/{answerId}", method = RequestMethod.POST)
     public void thumbsUpToAnswer(@PathVariable long questionId, @PathVariable long answerId) {
         boardService.thumbsUpToAnswer(answerId);
         return;
     }
+
     // 답변 수정
-    @RequestMapping(value="/question/{questionId}/answer/{answerId}", method=RequestMethod.PUT)
-    public void modifyAnswer(@PathVariable long questionId, @PathVariable long answerId, @RequestParam("title")String title, @RequestParam("content")String content, HttpServletResponse response) {
+    @RequestMapping(value = "/question/{questionId}/answer/{answerId}", method = RequestMethod.PUT)
+    public void modifyAnswer(@PathVariable long questionId, @PathVariable long answerId,
+            @RequestParam("title") String title, @RequestParam("content") String content,
+            HttpServletResponse response) {
         String principal = getPrincipal();
         try {
             boardService.modifyAnswer(principal, answerId, title, content);
@@ -141,8 +157,9 @@ public class BoardController {
         }
         return;
     }
+
     // 답변 삭제
-    @RequestMapping(value="/question/{questionId}/answer/{answerId}", method=RequestMethod.DELETE)
+    @RequestMapping(value = "/question/{questionId}/answer/{answerId}", method = RequestMethod.DELETE)
     public void deleteAnswer(@PathVariable long questionId, @PathVariable long answerId, HttpServletResponse response) {
         String principal = getPrincipal();
         try {
@@ -152,16 +169,9 @@ public class BoardController {
         }
         return;
     }
-    
 
-
-    
-
-
-    
-    private String getPrincipal(){
+    private String getPrincipal() {
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-
 
 }

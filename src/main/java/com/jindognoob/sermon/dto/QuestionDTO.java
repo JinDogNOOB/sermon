@@ -23,27 +23,39 @@ public class QuestionDTO {
     private String title;
     private String content;
     private Date createdDate;
-    private Long accountId;
     private QuestionStatusType status;
-    private List<AnswerDTO> answers = new ArrayList<AnswerDTO>();
+
     private List<String> tags;
+
+    private Long accountId;
+    private String nickname;
+
+    private Long answersSize;
+    private Long viewCount;
 
 
     public static QuestionDTO of(Question question){
         if(question == null) return null;
         QuestionDTO questionDTO = ModelMapperUtils.getInstance().map(question, QuestionDTO.class);
         
-        questionDTO.setAccountId(question.getId());
-        questionDTO.setAnswers(AnswerDTO.of(question.getAnswers()));
+        questionDTO.setAccountId(question.getAccount().getId());
+        questionDTO.setAnswersSize((long)question.getAnswers().size());
+        questionDTO.setNickname(question.getAccount().getNickname());
         return questionDTO;
     }
 
     // 아마 accountID는 포함안될거임 실제 보고 필요하면 추가 
     public static List<QuestionDTO> of(List<Question> questions){
         if(questions == null) return null;
-        return questions.stream()
+            List<QuestionDTO> result = new ArrayList<QuestionDTO>();
+        for(Question question : questions){
+            result.add(QuestionDTO.of(question));
+        }
+        return result;
+/*         return questions.stream()
         .map(questionEntity -> ModelMapperUtils.getInstance().map(questionEntity, QuestionDTO.class))
-        .collect(Collectors.toList());
+        .collect(Collectors.toList()); */
+
     }
 
 }

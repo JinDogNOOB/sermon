@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AccountUserDetailService implements UserDetailsService{
     @Autowired private AccountRepository accountRepository;
@@ -28,7 +31,13 @@ public class AccountUserDetailService implements UserDetailsService{
             // TODO Auto-generated method stub
             Optional<Account> byUserEmail = accountRepository.findOneByEmailAsOptional(username);
             Account account = byUserEmail.orElseThrow(() -> new UsernameNotFoundException(username));
-            return new AccountUserDetail(account.getEmail(), account.getPassword(), authorities(account.getRoleType()));
+            log.info("AccountUserDetailService");
+            log.info(account.getEmail());
+            log.info(account.getNickname());
+            log.info(account.getRoleType().toString());
+            log.info(account.getId()+"");
+
+            return new AccountUserDetail(account.getId(), account.getEmail(), account.getPassword(),account.getNickname(), account.getRoleType(), authorities(account.getRoleType()));
         }
         
         private Collection<? extends GrantedAuthority> authorities(AccountRoleType role){

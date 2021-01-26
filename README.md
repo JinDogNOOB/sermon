@@ -5,7 +5,9 @@
 
 # api 
 * SNR : security not required
-
+* /user/login : 로그인 SNR
+    - email
+    - password
 * /user/signup POST : 회원가입 SNR
     - String email
     - String password
@@ -19,6 +21,8 @@
     - String password
 
 * /board/question GET : 질문 리스트 조회 SNR
+* /board/question/more GET : 질문 리스트 조회 more (lastIndex기반) SNR
+    - long lastIndex : 요구사항변경으로 추가 
 * /board/question POST : 질문 등록
     - String title
     - String content
@@ -31,17 +35,17 @@
     - String content
 * /board/question/{questionId} DELETE : 질문 삭제
 
-* /question/{questionId}/answer GET : 답변 리스트 조회 SNR
-* /question/{questionId}/answer POST : 답변 등록
+* /board/question/{questionId}/answer GET : 답변 리스트 조회 SNR
+* /board/question/{questionId}/answer POST : 답변 등록
     - String title
     - String content
 
-* /question/{questionId}/answer/{answerId} GET : 답변 상세 조회 SNR
-* /question/{questionId}/answer/{answerId} POST : 답변 추천 SNR
-* /question/{questionId}/answer/{answerId} PUT : 답변 수정
+* /board/question/{questionId}/answer/{answerId} GET : 답변 상세 조회 SNR
+* /board/question/{questionId}/answer/{answerId} POST : 답변 추천 SNR
+* /board/question/{questionId}/answer/{answerId} PUT : 답변 수정
     - String title
     - String content
-* /question/{questionId}/answer/{answerId} DELETE : 답변 삭제
+* /board/question/{questionId}/answer/{answerId} DELETE : 답변 삭제
 
 
 

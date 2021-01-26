@@ -13,5 +13,10 @@ public class Paging {
         this.pageNumber = pageNumber-1;
         this.pageSize = pageSize;
     }
+    
+    public void setPageNumber(int pageNumber){
+        if(pageSize > 100) pageSize = 100;
+        this.pageNumber = pageNumber-1;
+    }
 
 }
