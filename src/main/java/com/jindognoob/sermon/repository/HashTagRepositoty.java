@@ -20,6 +20,7 @@ public class HashTagRepositoty {
     @PersistenceContext EntityManager em;
 
     public void save(HashTag hashTag){
+        
         if(hashTag.getId() == null){
             em.persist(hashTag);
         }else{

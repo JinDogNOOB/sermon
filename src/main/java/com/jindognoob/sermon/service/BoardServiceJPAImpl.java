@@ -58,7 +58,14 @@ public class BoardServiceJPAImpl implements BoardService{
         for(String s : hashTagList){
             HashTag hashTag = new HashTag();
             hashTag.setTag(s);
-            hashTagRepository.save(hashTag);
+            if(hashTagRepository.findByTag(s).isEmpty()){
+                hashTagRepository.save(hashTag);
+            }else{
+                hashTag = hashTagRepository.findByTag(s).get(0);
+            }
+
+           
+            
 
             QuestionHashTag questionHashTag = new QuestionHashTag();
             questionHashTag.setHashTag(hashTag);

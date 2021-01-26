@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jindognoob.sermon.domain.Question;
+import com.jindognoob.sermon.domain.QuestionHashTag;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.utils.ModelMapperUtils;
 
@@ -25,7 +26,7 @@ public class QuestionDTO {
     private Date createdDate;
     private QuestionStatusType status;
 
-    private List<String> tags;
+    private List<String> hashTags;
 
     private Long accountId;
     private String nickname;
@@ -41,6 +42,7 @@ public class QuestionDTO {
         questionDTO.setAccountId(question.getAccount().getId());
         questionDTO.setAnswersSize((long)question.getAnswers().size());
         questionDTO.setNickname(question.getAccount().getNickname());
+        questionDTO.setHashTags(getHashTagsFromQuestion(question));
         return questionDTO;
     }
 
@@ -56,6 +58,14 @@ public class QuestionDTO {
         .map(questionEntity -> ModelMapperUtils.getInstance().map(questionEntity, QuestionDTO.class))
         .collect(Collectors.toList()); */
 
+    }
+
+    private static List<String> getHashTagsFromQuestion(Question question){
+        List<String> result = new ArrayList<String>();
+        List<QuestionHashTag> qhts = question.getQuestionHashTags();
+        for(QuestionHashTag qht : qhts)
+            result.add(qht.getHashTag().getTag());
+        return result;
     }
 
 }
