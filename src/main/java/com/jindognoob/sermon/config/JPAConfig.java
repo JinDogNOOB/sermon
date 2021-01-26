@@ -41,8 +41,8 @@ public class JPAConfig {
         properties.setProperty("hibernate.id.new_generator_mappings", "true");
 
         // 디버그용 설정
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
+        properties.setProperty("hibernate.show_sql", "false");
+        properties.setProperty("hibernate.format_sql", "false");
         return properties;
     }
 
