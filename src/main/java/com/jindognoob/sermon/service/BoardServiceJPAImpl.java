@@ -1,5 +1,6 @@
 package com.jindognoob.sermon.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class BoardServiceJPAImpl implements BoardService{
     @Autowired AnswerRepository answerRepository;
     @Autowired QuestionRepository questionRepository;
     @Autowired AccountRepository accountRepository;
-    @Autowired HashTagRepositoty hashTagRepositoty;
+    @Autowired HashTagRepositoty hashTagRepository;
     @Autowired QuestionHashTagRepository questionHashTagRepository;
 
     @Override
@@ -57,7 +58,7 @@ public class BoardServiceJPAImpl implements BoardService{
         for(String s : hashTagList){
             HashTag hashTag = new HashTag();
             hashTag.setTag(s);
-            hashTagRepositoty.save(hashTag);
+            hashTagRepository.save(hashTag);
 
             QuestionHashTag questionHashTag = new QuestionHashTag();
             questionHashTag.setHashTag(hashTag);
@@ -216,5 +217,14 @@ public class BoardServiceJPAImpl implements BoardService{
             throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
         answer.setTitle(title);
         answer.setContent(content);
+    }
+
+    @Override
+    public List<String> findCandidateHashTags(String letter){
+        List<HashTag> hashtags = hashTagRepository.findCandidateTags(letter);
+        List<String> result = new ArrayList<String>();
+        for(HashTag hashTag: hashtags)
+            result.add(hashTag.getTag());
+        return result;
     }
 }

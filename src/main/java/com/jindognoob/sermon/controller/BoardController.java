@@ -170,8 +170,24 @@ public class BoardController {
         return;
     }
 
+
+
+    @RequestMapping(value="/hashtag", method=RequestMethod.GET)
+    public List<String> getRelatedHashTag(@RequestParam("letter") String letter) {
+        return boardService.findCandidateHashTags(letter);
+    }
+    
+
+
+
+
+
+
     private String getPrincipal() {
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+
+    
 
 }

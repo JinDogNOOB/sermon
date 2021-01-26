@@ -50,6 +50,9 @@
     - String content
 * /board/question/{questionId}/answer/{answerId} DELETE : 답변 삭제
 
+* /board/hashtag GET : 해쉬태그 추천 SNR
+    - String letter
+
 
 
 

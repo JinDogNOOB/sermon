@@ -38,4 +38,5 @@ public interface BoardService {
     public void modifyQuestion(String principal, Long questionId, String title, String content) throws ContentAuthorizationViolationException;
     public void modifyAnswer(String principal, Long answerId, String title, String content) throws ContentAuthorizationViolationException;
 
+    public List<String> findCandidateHashTags(String letter);
 }
