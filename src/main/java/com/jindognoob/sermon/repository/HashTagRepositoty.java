@@ -1,5 +1,6 @@
 package com.jindognoob.sermon.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -38,7 +39,7 @@ public class HashTagRepositoty {
     public List<HashTag> findCandidateTags(String letter){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QHashTag h = QHashTag.hashTag;
-
+        List<String> adf = new ArrayList<String>();
         // .like 는 완전일치만 반환 여기다가 앞뒤로 "%" 붙이는 등으로 부분검색이 가능
         // .contains 는 like 앞뒤로 %붙인거랑 동 
         // 여기서는 앞글자는 똑같아야하니까 전자 사용

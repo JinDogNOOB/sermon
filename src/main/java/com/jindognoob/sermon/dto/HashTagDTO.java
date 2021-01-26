@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 
 @Getter
-public class QueryStringDTO {
+@Setter
+public class HashTagDTO {
     List<String> hashTags = new ArrayList<String>();
-    List<String> querys = new ArrayList<String>();
     
     public void addHashTag(String hashTag){
         this.hashTags.add(hashTag);
-    }
-    public void addQuery(String query){
-        this.querys.add(query);
     }
 }

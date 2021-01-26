@@ -1,19 +1,18 @@
 package com.jindognoob.sermon.utils;
 
-import com.jindognoob.sermon.dto.QueryStringDTO;
+import com.jindognoob.sermon.dto.HashTagDTO;
 
-public class QueryStringParser {
+
+public class HashTagParser {
     
-
-    public static QueryStringDTO parseQueryString(String queryString){
-        QueryStringDTO result = new QueryStringDTO();
+    
+    public static HashTagDTO parseQueryString(String queryString){
+        HashTagDTO result = new HashTagDTO();
         String queryStrings[] = queryString.split(" ");
         for(String q : queryStrings){
             if(q.length() < 2) continue;
             if(q.charAt(0)=='#')
                 result.addHashTag(q.substring(1));
-            else
-                result.addQuery(q);
         }
         return result;
     }

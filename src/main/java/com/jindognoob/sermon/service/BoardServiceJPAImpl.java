@@ -17,6 +17,7 @@ import com.jindognoob.sermon.service.constants.PointRule;
 import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
 import com.jindognoob.sermon.service.exceptions.ContentAuthorizationViolationException;
 import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationException;
+import com.jindognoob.sermon.utils.HashTagParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,12 +110,12 @@ public class BoardServiceJPAImpl implements BoardService{
     }
 
     @Override
-    public List<QuestionDTO> getQuestions(Paging paging){
-        return QuestionDTO.of(questionRepository.findPage(paging));
+    public List<QuestionDTO> getQuestions(Paging paging, String hashTags){
+        return QuestionDTO.of(questionRepository.findPage(paging, HashTagParser.parseQueryString(hashTags)));
     }
     @Override
-    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex){
-        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex));
+    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex, String hashTags){
+        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex, HashTagParser.parseQueryString(hashTags)));
     }
     @Override
     public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type){

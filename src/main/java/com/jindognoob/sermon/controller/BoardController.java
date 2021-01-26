@@ -34,18 +34,18 @@ public class BoardController {
 
     // 질문 리스트
     @RequestMapping(value = "/question", method = RequestMethod.GET)
-    public List<QuestionDTO> getQuestions(Paging paging) {
+    public List<QuestionDTO> getQuestions(Paging paging, @RequestParam("hashTags") String hashTags) {
         log.info("paging.number : " + paging.getPageNumber());
         log.info("paging.size : " + paging.getPageSize());
-        return boardService.getQuestions(paging);
+        return boardService.getQuestions(paging, hashTags);
     }
 
     // 질문 리스트
     @RequestMapping(value = "/question/more", method = RequestMethod.GET)
-    public List<QuestionDTO> getQuestionsMore(Paging paging, @RequestParam("lastIndex")long lastIndex) {
+    public List<QuestionDTO> getQuestionsMore(Paging paging, @RequestParam("lastIndex")long lastIndex, @RequestParam("hashTags") String hashTags) {
         log.info("paging.number : " + paging.getPageNumber());
         log.info("paging.size : " + paging.getPageSize());
-        return boardService.getQuestions(paging, lastIndex);
+        return boardService.getQuestions(paging, lastIndex, hashTags);
     }
 
     // 질문 등록
