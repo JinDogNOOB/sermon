@@ -12,7 +12,7 @@ import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationExcep
 
 public interface BoardService {
     
-    public Long addQuestion(String principal, String title, String content);
+    public Long addQuestion(String principal, String title, String content, String hashTags);
 
     public void deleteQuestion(String principal, Long questionId) throws ContentAuthorizationViolationException, QuestionStatusRuleViolationException;
     public QuestionDTO getQuestion(Long id);
@@ -23,8 +23,8 @@ public interface BoardService {
     public AnswerDTO getAnswer(Long id);
 
 
-    public List<QuestionDTO> getQuestions(Paging paging);
-    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex);
+    public List<QuestionDTO> getQuestions(Paging paging, String hashTags);
+    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex, String hashTags);
     public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type);
     public List<QuestionDTO> getMyQuestions(String principal, Paging paging);
     public List<QuestionDTO> getMyQuestions(String principal, Paging paging, QuestionStatusType type);
@@ -38,4 +38,5 @@ public interface BoardService {
     public void modifyQuestion(String principal, Long questionId, String title, String content) throws ContentAuthorizationViolationException;
     public void modifyAnswer(String principal, Long answerId, String title, String content) throws ContentAuthorizationViolationException;
 
+    public List<String> findCandidateHashTags(String letter);
 }

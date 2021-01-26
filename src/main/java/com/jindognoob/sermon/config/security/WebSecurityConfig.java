@@ -50,7 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(
             "/user/login",
             "/user/signup",
-            "/console/**"
+            "/console/**",
+            "/board/hashtag"
             ).permitAll()
             .antMatchers(HttpMethod.GET, "/board/question").permitAll()
             .antMatchers(HttpMethod.GET, "/board/question/*").permitAll()

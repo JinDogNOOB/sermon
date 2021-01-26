@@ -1,22 +1,28 @@
 package com.jindognoob.sermon.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.Answer;
+import com.jindognoob.sermon.domain.HashTag;
 import com.jindognoob.sermon.domain.Question;
+import com.jindognoob.sermon.domain.QuestionHashTag;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.AnswerDTO;
 import com.jindognoob.sermon.dto.Paging;
 import com.jindognoob.sermon.dto.QuestionDTO;
 import com.jindognoob.sermon.repository.AccountRepository;
 import com.jindognoob.sermon.repository.AnswerRepository;
+import com.jindognoob.sermon.repository.HashTagRepositoty;
+import com.jindognoob.sermon.repository.QuestionHashTagRepository;
 import com.jindognoob.sermon.repository.QuestionRepository;
 import com.jindognoob.sermon.service.constants.PointRule;
 import com.jindognoob.sermon.service.exceptions.AnswerDoesNotBelongsToQuestionException;
 import com.jindognoob.sermon.service.exceptions.ContentAuthorizationViolationException;
 import com.jindognoob.sermon.service.exceptions.QuestionStatusRuleViolationException;
+import com.jindognoob.sermon.utils.HashTagParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +37,11 @@ public class BoardServiceJPAImpl implements BoardService{
     @Autowired AnswerRepository answerRepository;
     @Autowired QuestionRepository questionRepository;
     @Autowired AccountRepository accountRepository;
-    
+    @Autowired HashTagRepositoty hashTagRepository;
+    @Autowired QuestionHashTagRepository questionHashTagRepository;
+
     @Override
-    public Long addQuestion(String principal, String title, String content){
+    public Long addQuestion(String principal, String title, String content, String hashTags){
         Account account = accountRepository.findOneByEmail(principal);
 
         Question question = new Question();
@@ -43,8 +51,28 @@ public class BoardServiceJPAImpl implements BoardService{
         question.setStatus(QuestionStatusType.ACTIVE);
         question.setCreatedDate(Calendar.getInstance().getTime());
         question.setViewCount((long)0);
-
         questionRepository.save(question);
+
+        // hashtag 등록 
+        List<String> hashTagList = HashTagParser.parseHashTagsString(hashTags);
+        for(String s : hashTagList){
+            HashTag hashTag = new HashTag();
+            hashTag.setTag(s);
+            if(hashTagRepository.findByTag(s).isEmpty()){
+                hashTagRepository.save(hashTag);
+            }else{
+                hashTag = hashTagRepository.findByTag(s).get(0);
+            }
+
+           
+            
+
+            QuestionHashTag questionHashTag = new QuestionHashTag();
+            questionHashTag.setHashTag(hashTag);
+            questionHashTag.setQuestion(question);
+            questionHashTagRepository.save(questionHashTag);
+        }
+
         return question.getId();
     }
     
@@ -109,12 +137,12 @@ public class BoardServiceJPAImpl implements BoardService{
     }
 
     @Override
-    public List<QuestionDTO> getQuestions(Paging paging){
-        return QuestionDTO.of(questionRepository.findPage(paging));
+    public List<QuestionDTO> getQuestions(Paging paging, String hashTags){
+        return QuestionDTO.of(questionRepository.findPage(paging, HashTagParser.parseHashTagsString(hashTags)));
     }
     @Override
-    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex){
-        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex));
+    public List<QuestionDTO> getQuestions(Paging paging, long lastIndex, String hashTags){
+        return QuestionDTO.of(questionRepository.findPage(paging, lastIndex, HashTagParser.parseHashTagsString(hashTags)));
     }
     @Override
     public List<QuestionDTO> getQuestions(Paging paging, QuestionStatusType type){
@@ -196,5 +224,14 @@ public class BoardServiceJPAImpl implements BoardService{
             throw new ContentAuthorizationViolationException("컨텐트 권한자가 아님");
         answer.setTitle(title);
         answer.setContent(content);
+    }
+
+    @Override
+    public List<String> findCandidateHashTags(String letter){
+        List<HashTag> hashtags = hashTagRepository.findCandidateTags(letter);
+        List<String> result = new ArrayList<String>();
+        for(HashTag hashTag: hashtags)
+            result.add(hashTag.getTag());
+        return result;
     }
 }

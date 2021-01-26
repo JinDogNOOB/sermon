@@ -47,7 +47,7 @@ public class BoardServiceTest {
     @Test
     public void 질문_등록() {
         AccountDTO account = createTest0Account();
-        Long id = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long id = boardService.addQuestion(account.getEmail(), "question", "question", "");
 
         assertEquals("question", boardService.getQuestion(id).getTitle());
     }
@@ -55,14 +55,14 @@ public class BoardServiceTest {
     @Test
     public void 없는계정으로_질문등록_실패_확인() {
         Assertions.assertThrows(Exception.class, () -> {
-            boardService.addQuestion("uhehe", "question", "question");
+            boardService.addQuestion("uhehe", "question", "question", "");
         });
     }
 
     @Test
     public void 질문_삭제() {
         AccountDTO account = createTest0Account();
-        Long id = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long id = boardService.addQuestion(account.getEmail(), "question", "question", "");
         try {
             boardService.deleteQuestion(account.getEmail(), id);
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class BoardServiceTest {
     public void 소유자아닐때_질문_삭제_실패_확인() {
         AccountDTO account = createTest0Account();
         AccountDTO account2 = createTest1Account();
-        Long id = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long id = boardService.addQuestion(account.getEmail(), "question", "question", "");
 
         Assertions.assertThrows(ContentAuthorizationViolationException.class, () -> {
             boardService.deleteQuestion(account2.getEmail(), id);
@@ -86,7 +86,7 @@ public class BoardServiceTest {
     public void ClOSED된_질문_삭제_실패_확인() {
         AccountDTO account = createTest0Account();
         AccountDTO account2 = createTest1Account();
-        Long id = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long id = boardService.addQuestion(account.getEmail(), "question", "question", "");
 
         try {
             Long answerId = boardService.addAnswer(account2.getEmail(), "answer", "answer", id);
@@ -103,7 +103,7 @@ public class BoardServiceTest {
     public void 질문에_답변_생성_확인() {
         AccountDTO account = createTest0Account();
         AccountDTO account2 = createTest1Account();
-        Long id = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long id = boardService.addQuestion(account.getEmail(), "question", "question", "");
         try {
             boardService.addAnswer(account2.getEmail(), "answer", "answer", id);
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class BoardServiceTest {
     public void CLOSED된_질문에_답변_생성_실패_확인() {
         AccountDTO account = createTest0Account();
         AccountDTO account2 = createTest1Account();
-        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question", "");
         try {
             Long answerId = boardService.addAnswer(account2.getEmail(), "answer", "answer", questionId);
             boardService.adoptAnswer(account.getEmail(), questionId, answerId);
@@ -129,7 +129,7 @@ public class BoardServiceTest {
     @Test
     public void 자문자답_실패_확인() {
         AccountDTO account = createTest0Account();
-        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question", "");
 
         Assertions.assertThrows(IllegalStateException.class, () -> {
             boardService.addAnswer(account.getEmail(), "aaa", "bbb", questionId);
@@ -140,7 +140,7 @@ public class BoardServiceTest {
     public void CLOSED된_질문에_등록된_답변_삭제_실패_확인() {
         AccountDTO account = createTest0Account();
         AccountDTO account2 = createTest1Account();
-        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question", "");
 
         try {
             Long answerId = boardService.addAnswer(account2.getEmail(), "answer", "answer", questionId);
@@ -157,7 +157,7 @@ public class BoardServiceTest {
     public void 소유가_아닌_답변_삭제_실패_확인() {
         AccountDTO account = createTest0Account();
         AccountDTO account2 = createTest1Account();
-        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question");
+        Long questionId = boardService.addQuestion(account.getEmail(), "question", "question", "");
 
         try {
             Long answerId = boardService.addAnswer(account2.getEmail(), "answer", "answer", questionId);
@@ -174,10 +174,10 @@ public class BoardServiceTest {
     public void 질문_페이징_조회_확인0() {
         AccountDTO account = createTest0Account();
         for (int i = 0; i < 30; i++) {
-            boardService.addQuestion(account.getEmail(), "question", "question");
+            boardService.addQuestion(account.getEmail(), "question", "question", "");
         }
-        log.info("PageTest : " + boardService.getQuestions(new Paging(2, 10)).size());
-        int length = boardService.getQuestions(new Paging(2, 10)).size();
+        log.info("PageTest : " + boardService.getQuestions(new Paging(2, 10), "").size());
+        int length = boardService.getQuestions(new Paging(2, 10), "").size();
         assertEquals(10, length);
     }
 
@@ -185,11 +185,11 @@ public class BoardServiceTest {
     public void 질문_페이징_조회_확인() {
         AccountDTO account = createTest0Account();
         for (int i = 0; i < 30; i++)
-            boardService.addQuestion(account.getEmail(), "question", "question");
-        log.info("PageTest : " + boardService.getQuestions(new Paging(1, 10)).size());
-        log.info("PageTest : " + boardService.getQuestions(new Paging(2, 10)).size());
-        assertEquals(20, boardService.getQuestions(new Paging(1, 10)).size()
-                + boardService.getQuestions(new Paging(2, 10)).size());
+            boardService.addQuestion(account.getEmail(), "question", "question", "");
+        log.info("PageTest : " + boardService.getQuestions(new Paging(1, 10), "").size());
+        log.info("PageTest : " + boardService.getQuestions(new Paging(2, 10), "").size());
+        assertEquals(20, boardService.getQuestions(new Paging(1, 10), "").size()
+                + boardService.getQuestions(new Paging(2, 10), "").size());
     }
 
     @Test
@@ -198,7 +198,7 @@ public class BoardServiceTest {
             AccountDTO account = createTest0Account();
             AccountDTO account1 = createTest1Account();
             for (int i = 0; i < 30; i++) {
-                long qid = boardService.addQuestion(account.getEmail(), "question", "question");
+                long qid = boardService.addQuestion(account.getEmail(), "question", "question", "");
                 long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
                 if (i < 15)
                     boardService.adoptAnswer(account.getEmail(), qid, aid);
@@ -222,8 +222,8 @@ public class BoardServiceTest {
             AccountDTO account1 = createTest1Account();
             
             for (int i = 0; i < 30; i++) {
-                boardService.addQuestion(account.getEmail(), "question", "question");
-                boardService.addQuestion(account1.getEmail(), "question", "question");
+                boardService.addQuestion(account.getEmail(), "question", "question", "");
+                boardService.addQuestion(account1.getEmail(), "question", "question", "");
             }
 
 
@@ -239,7 +239,7 @@ public class BoardServiceTest {
             AccountDTO account = createTest0Account();
             AccountDTO account1 = createTest1Account();
             for (int i = 0; i < 30; i++) {
-                long qid = boardService.addQuestion(account.getEmail(), "question", "question");
+                long qid = boardService.addQuestion(account.getEmail(), "question", "question", "");
                 long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
                 if(i < 15) boardService.adoptAnswer(account.getEmail(), qid, aid);
             }
@@ -260,7 +260,7 @@ public class BoardServiceTest {
             AccountDTO account0 = createTest0Account();
             AccountDTO account1 = createTest1Account();
 
-            long qid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long qid = boardService.addQuestion(account0.getEmail(), "question", "question", "");
             long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
 
             Assertions.assertThrows(ContentAuthorizationViolationException.class, () -> {
@@ -278,7 +278,7 @@ public class BoardServiceTest {
             AccountDTO account0 = createTest0Account();
             AccountDTO account1 = createTest1Account();
 
-            long qid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long qid = boardService.addQuestion(account0.getEmail(), "question", "question", "");
             long aid = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
             long zzz = boardService.addAnswer(account1.getEmail(), "a", "a", qid);
             boardService.adoptAnswer(account0.getEmail(), qid, aid);
@@ -298,9 +298,9 @@ public class BoardServiceTest {
             AccountDTO account0 = createTest0Account();
             AccountDTO account1 = createTest1Account();
 
-            long qid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long qid = boardService.addQuestion(account0.getEmail(), "question", "question", "");
 
-            long aqid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            long aqid = boardService.addQuestion(account0.getEmail(), "question", "question", "");
             long aid = boardService.addAnswer(account1.getEmail(), "a", "a", aqid);
 
             Assertions.assertThrows(AnswerDoesNotBelongsToQuestionException.class, () -> {
@@ -318,8 +318,8 @@ public class BoardServiceTest {
             AccountDTO account0 = createTest0Account();
             AccountDTO account1 = createTest1Account();
 
-            boardService.addQuestion(account0.getEmail(), "question", "question");
-            long aqid = boardService.addQuestion(account0.getEmail(), "question", "question");
+            boardService.addQuestion(account0.getEmail(), "question", "question", "");
+            long aqid = boardService.addQuestion(account0.getEmail(), "question", "question", "");
 
             long aid = boardService.addAnswer(account1.getEmail(), "a", "a", aqid);
             boardService.adoptAnswer(account0.getEmail(), aqid, aid);

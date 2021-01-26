@@ -56,4 +56,7 @@ public class Question extends Post{
     // mappedby
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<Answer>();
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<QuestionHashTag> questionHashTags = new ArrayList<QuestionHashTag>();
 }

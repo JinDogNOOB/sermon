@@ -9,7 +9,9 @@ import javax.persistence.TypedQuery;
 
 import com.jindognoob.sermon.domain.Account;
 import com.jindognoob.sermon.domain.Answer;
+import com.jindognoob.sermon.domain.QHashTag;
 import com.jindognoob.sermon.domain.QQuestion;
+import com.jindognoob.sermon.domain.QQuestionHashTag;
 import com.jindognoob.sermon.domain.Question;
 import com.jindognoob.sermon.domain.etypes.QuestionStatusType;
 import com.jindognoob.sermon.dto.Paging;
@@ -51,15 +53,52 @@ public class QuestionRepository {
         return em.createQuery("select q from Question q", Question.class).getResultList();
     }
 
-    public List<Question> findPage(Paging paging){
+    public List<Question> findPage(Paging paging, List<String> hashTags){
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QQuestion q = QQuestion.question;
+        QQuestionHashTag qht = QQuestionHashTag.questionHashTag;
+        QHashTag ht = QHashTag.hashTag;
+
+        if(hashTags.size() > 0){
+            List<Long> ids = queryFactory
+            .select(q.id)
+            .from(q)
+            .where(ht.tag.in(hashTags))
+            .orderBy(q.id.desc())
+            .offset(paging.getPageSize() * paging.getPageNumber())
+            .limit(paging.getPageSize())
+            .innerJoin(q.questionHashTags, qht)
+            .innerJoin(qht.hashTag, ht)
+            .fetch();
+            return queryFactory.select(q).from(q).where(q.id.in(ids)).orderBy(q.id.desc()).fetch();
+        }
+
         TypedQuery<Question> query = em.createQuery("select q from Question q order by q.id DESC", Question.class);
         query.setFirstResult((paging.getPageNumber()) * paging.getPageSize());
         query.setMaxResults(paging.getPageSize());
         return query.getResultList();
     }
-    public List<Question> findPage(Paging paging, long lastIndex){
+    public List<Question> findPage(Paging paging, long lastIndex, List<String> hashTags){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QQuestion q = QQuestion.question;
+
+        QQuestionHashTag qht = QQuestionHashTag.questionHashTag;
+        QHashTag ht = QHashTag.hashTag;
+
+        if(hashTags.size() > 0){
+            List<Long> ids = queryFactory
+            .select(q.id)
+            .from(q)
+            .where(q.id.lt(lastIndex).and(ht.tag.in(hashTags)))
+            .orderBy(q.id.desc())
+            .limit(paging.getPageSize())
+            .innerJoin(q.questionHashTags, qht)
+            .innerJoin(qht.hashTag, ht)
+            .fetch();
+            return queryFactory.select(q).from(q).where(q.id.in(ids)).orderBy(q.id.desc()).fetch();
+        }
+
+
         List<Long> ids = queryFactory
             .select(q.id)
             .from(q)
@@ -77,6 +116,7 @@ public class QuestionRepository {
     public List<Question> findPage(Paging paging, QuestionStatusType type){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QQuestion q = QQuestion.question;
+        
         // 1) 커버링 인덱스로 대상 조회 -> https://jojoldu.tistory.com/529?category=637935 이분 진짜 주석 멋지게 다신다!! 배움
         List<Long> ids = queryFactory
             .select(q.id)
@@ -143,5 +183,7 @@ public class QuestionRepository {
             .where(question.id.in(ids))
             .orderBy(question.id.desc()).fetch();
     }
+
+
 
 }
