@@ -107,6 +107,7 @@ public class QuestionRepository {
         List<Long> ids = queryFactory
             .select(question.id)
             .from(question)
+            .where(question.account.eq(account))
             .orderBy(question.id.desc())
             .limit(paging.getPageSize())
             .offset((paging.getPageNumber()) * paging.getPageSize())
@@ -128,7 +129,7 @@ public class QuestionRepository {
         List<Long> ids = queryFactory
             .select(question.id)
             .from(question)
-            .where(question.status.eq(type))
+            .where(question.account.eq(account).and(question.status.eq(type)))
             .orderBy(question.id.desc())
             .limit(paging.getPageSize())
             .offset((paging.getPageNumber()) * paging.getPageSize())
